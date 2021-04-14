@@ -475,6 +475,9 @@ class PLAYERPL():
 
    
         src=vid['video']['sources']['dash']['url']
+        tshiftl = vid.get('video', {}).get('time_shift', {}).get('total_length', 0)
+        if tshiftl > 0:
+            src += '&dvr=' + str(tshiftl * 1000 + 1000)
         widev=vid['video']['protections']['widevine']['src']
         if vidsesid:
             widev+='&videoSessionId=%s'%vidsesid
