@@ -481,9 +481,7 @@ class PLAYERPL():
         widev=vid['video']['protections']['widevine']['src']
         if vidsesid:
             widev+='&videoSessionId=%s'%vidsesid
-    
-        src=requests.get(src)
-        src=src.headers['Location']
+
         return src,widev,outsub
     
     def refreshTokenTVN(self):
