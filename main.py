@@ -858,12 +858,8 @@ class PLAYERPL():
             except:
                 opis=''
             dod=''
-            if dd["payable"]:
-                if dd['id'] not in mylist:
-                    dod=' - [I][COLOR khaki](brak w pakiecie)[/COLOR][/I]'
-                    playk =False
-                    mud = '   '
-            out.append({'title':PLchar(tyt)+dod,'url':urlid,'img':foto,'plot':PLchar(opis)})    
+            if (not dd["payable"]) or dd['id'] in mylist:
+                out.append({'title':PLchar(tyt)+dod,'url':urlid,'img':foto,'plot':PLchar(opis)})
         return out
     def ListCateg(self,idslug):
         id,slug = idslug.split(':')
