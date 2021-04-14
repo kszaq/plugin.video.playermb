@@ -158,9 +158,8 @@ def remove_html_tags(text):
     clean = re.compile('<.*?>')
     return re.sub(clean, '', text)
 def home():
-    PLAYERPL().sprawdzenie1()
-
-    PLAYERPL().sprawdzenie2()
+    if PLAYERPL().LOGGED != 'true':
+        add_item('', '[B][COLOR blue]Zaloguj[/COLOR][/B]', ikona, "login", folder=False,fanart=FANART)
     add_item('', '[B][COLOR khaki]Ulubione[/COLOR][/B]', ikona, "favors", folder=True,fanart=FANART)
     getmenu()
     add_item('', 'Kolekcje', ikona, "collect", folder=True,fanart=FANART)
@@ -168,7 +167,6 @@ def home():
     add_item('', '[B][COLOR blue]Opcje[/COLOR][/B]', ikona, "opcje", folder=False,fanart=FANART)
     if PLAYERPL().LOGGED == 'true':
         add_item('', '[B][COLOR blue]Wyloguj[/COLOR][/B]', ikona, "logout", folder=False,fanart=FANART)
-    
 def get_addon():
     return addon
 
@@ -409,8 +407,6 @@ class PLAYERPL():
             
             set_setting('selected_profile_id', self.SELECTED_PROFILE_ID)
             set_setting('selected_profile', self.SELECTED_PROFILE)
-        if self.LOGGED != 'true':
-            add_item('', '[B][COLOR blue]Zaloguj[/COLOR][/B]', ikona, "login", folder=False,fanart=FANART)
     
     def getTranslate(self,id_):
 
@@ -887,6 +883,9 @@ class PLAYERPL():
     
     
 if __name__ == '__main__':
+
+    PLAYERPL().sprawdzenie1()
+    PLAYERPL().sprawdzenie2()
 
     mode = params.get('mode', None)
     
