@@ -191,12 +191,12 @@ def getRequests(url, data={}, headers={}, params ={}):
     if data:
         if headers.get('Content-Type', '').startswith('application/json'):
 
-            content=sess.post(url,headers=headers,json=data, params=params, verify=False).json()
+            content=sess.post(url,headers=headers,json=data, params=params).json()
         else:
 
-            content=sess.post(url,headers=headers,data=data, params=params, verify=False).json()
+            content=sess.post(url,headers=headers,data=data, params=params).json()
     else:
-        content=sess.get(url,headers=headers, params=params, verify=False).json()
+        content=sess.get(url,headers=headers, params=params).json()
     return content
     
 def idle():
@@ -482,7 +482,7 @@ class PLAYERPL():
         if vidsesid:
             widev+='&videoSessionId=%s'%vidsesid
     
-        src=requests.get(src,allow_redirects=False,verify=False)
+        src=requests.get(src)
         src=src.headers['Location']
         return src,widev,outsub
     
