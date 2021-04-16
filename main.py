@@ -27,6 +27,11 @@ import json
 
 import inputstreamhelper
 
+UA = 'okhttp/3.3.1 Android'
+#UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:87.0) Gecko/20100101 Firefox/87.0'
+PF = 'ANDROID_TV'
+#PF = 'BROWSER'
+
 base_url = sys.argv[0]
 addon_handle = int(sys.argv[1])
 params = dict(parse_qsl(sys.argv[2][1:]))
@@ -255,9 +260,9 @@ class PLAYERPL():
         self.PRODUCTVODLIST = self.api_base + 'product/vod/list'
         self.PRODUCTLIVELIST= self.api_base + 'product/list/list'
         
-        self.PARAMS = {'4K': 'true','platform': 'ANDROID_TV'}
+        self.PARAMS = {'4K': 'true','platform': PF}
         
-        self.HEADERS3 = { 'Host': 'konto.tvn.pl','user-agent': 'okhttp/3.3.1 Android','content-type': 'application/x-www-form-urlencoded; charset=UTF-8'}
+        self.HEADERS3 = { 'Host': 'konto.tvn.pl','user-agent': UA,'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'}
         
 
         
@@ -282,7 +287,7 @@ class PLAYERPL():
             'Authorization': 'Basic',
             'API-DeviceInfo': '%s;%s;Android;9;%s;1.0.38(62);'%(self.USAGENT, self.USAGENTVER, self.MAKER ),
             'API-DeviceUid': self.DEVICE_ID,
-            'User-Agent': 'okhttp/3.3.1 Android',
+            'User-Agent': UA,
             'Host': 'player.pl',
             'X-NewRelic-ID': 'VQEOV1JbABABV1ZaBgMDUFU='
         }
@@ -394,7 +399,7 @@ class PLAYERPL():
 
         if self.REFRESH_TOKEN:
         
-            PARAMS = {'4K': 'true','platform': 'ANDROID_TV'}
+            PARAMS = {'4K': 'true','platform': PF}
             self.HEADERS2['Content-Type'] =  'application/json; charset=UTF-8'
 
             POST_DATA = {"agent":self.USAGENT,"agentVersion":self.USAGENTVER,"appVersion":"1.0.38(62)","maker":self.MAKER,"os":"Android","osVersion":"9","token":self.ACCESS_TOKEN,"uid":self.DEVICE_ID}
@@ -414,7 +419,7 @@ class PLAYERPL():
     
     def getTranslate(self,id_):
 
-        PARAMS = {'4K': 'true','platform': 'ANDROID_TV', 'id': id_}
+        PARAMS = {'4K': 'true','platform': PF, 'id': id_}
         data = getRequests(self.TRANSLATE,headers = self.HEADERS2, params = PARAMS)
         return data
     
@@ -423,13 +428,12 @@ class PLAYERPL():
 
         HEADERSz = {
             'Authorization': 'Basic',
-            'API-DeviceInfo': '%s;%s;Android;9;%s;1.0.38(62);'%(self.USAGENT, self.USAGENTVER, self.MAKER ),
             'API-Authentication': self.ACCESS_TOKEN,
             'API-DeviceUid': self.DEVICE_ID,
             'API-SubscriberHash': self.USER_HASH,
             'API-SubscriberPub': self.USER_PUB,
             'API-ProfileUid': self.SELECTED_PROFILE_ID,
-            'User-Agent': 'okhttp/3.3.1 Android',
+            'User-Agent': UA,
             'Host': 'player.pl',
             'X-NewRelic-ID': 'VQEOV1JbABABV1ZaBgMDUFU=',
         }
@@ -439,7 +443,7 @@ class PLAYERPL():
         if 'kanal' in id_:
             id_=id_.split(':')[0]
             rodzaj = 'LIVE'
-        urlk='https://player.pl/playerapi/product/%s/player/configuration?type=%s&4K=true&platform=ANDROID_TV'%(str(id_),rodzaj)
+        urlk='https://player.pl/playerapi/product/%s/player/configuration?type=%s&4K=true&platform=%s'%(str(id_),rodzaj,PF)
     
         data = getRequests(urlk,headers = HEADERSz)
     
@@ -449,13 +453,13 @@ class PLAYERPL():
         except:
             vidsesid=False
             pass
-        PARAMS = {'type': rodzaj,'platform': 'ANDROID_TV'}
+        PARAMS = {'type': rodzaj,'platform': PF}
     
         data = getRequests(self.api_base+'item/%s/playlist'%(str(id_)),headers = HEADERSz, params = PARAMS)
     
         if not data:
     
-            urlk='https://player.pl/playerapi/item/%s/playlist?type=%s&platform=ANDROID_TV&videoSessionId=%s'%(str(id_),rodzaj,str(vidsesid))
+            urlk='https://player.pl/playerapi/item/%s/playlist?type=%s&platform=%s&videoSessionId=%s'%(str(id_),rodzaj,PF,str(vidsesid))
             
             
             
@@ -545,7 +549,7 @@ class PLAYERPL():
             'API-SubscriberHash': self.USER_HASH,
             'API-SubscriberPub': self.USER_PUB,
             'API-ProfileUid': self.SELECTED_PROFILE_ID,
-            'User-Agent': 'okhttp/3.3.1 Android',
+            'User-Agent': UA,
             'Host': 'player.pl',
             'X-NewRelic-ID': 'VQEOV1JbABABV1ZaBgMDUFU=',
         }
@@ -579,7 +583,7 @@ class PLAYERPL():
     def ListCollection(self):
         self.refreshTokenTVN()
 
-        data = getRequests('https://player.pl/playerapi/product/section/list?order=asc&maxResults=0&firstResult=0&4K=true&platform=ANDROID_TV',headers = self.HEADERS2, params = {})
+        data = getRequests('https://player.pl/playerapi/product/section/list?order=asc&maxResults=0&firstResult=0&4K=true&platform=%s'%(PF),headers = self.HEADERS2, params = {})
         mud="listcollectContent"
         for vod in data:
             id_=vod['id']
@@ -598,7 +602,7 @@ class PLAYERPL():
     def ListFavorites(self):
         self.refreshTokenTVN()
 
-        data = getRequests('https://player.pl/playerapi/subscriber/bookmark?type=FAVOURITE&4K=true&platform=ANDROID_TV',headers = self.HEADERS2, params = {})
+        data = getRequests('https://player.pl/playerapi/subscriber/bookmark?type=FAVOURITE&4K=true&platform=%s'%(PF),headers = self.HEADERS2, params = {})
         try:
             vods = data['items']
             if len(vods)>0:
@@ -629,17 +633,17 @@ class PLAYERPL():
     def ListSearch(self,query):
         self.refreshTokenTVN()
 
-        mylist = getRequests('https://player.pl/playerapi/subscriber/product/available/list?4K=true&platform=ANDROID_TV',headers = self.HEADERS2, params = {})
+        mylist = getRequests('https://player.pl/playerapi/subscriber/product/available/list?4K=true&platform=%s'%(PF),headers = self.HEADERS2, params = {})
         
         PARAMS = {}
-        urlk='https://player.pl/playerapi/product/live/search?keyword=%s&4K=true&platform=ANDROID_TV'%(query)
+        urlk='https://player.pl/playerapi/product/live/search?keyword=%s&4K=true&platform=%s'%(query, PF)
     
         lives = getRequests(urlk,headers = self.HEADERS2, params = PARAMS)
         lives = lives['items']
         if len(lives)>0:
             for live in lives:
                 ac=''
-        urlk='https://player.pl/playerapi/product/vod/search?keyword=%s&4K=true&platform=ANDROID_TV'%(query)
+        urlk='https://player.pl/playerapi/product/vod/search?keyword=%s&4K=true&platform=%s'%(query, PF)
     
         vods = getRequests(urlk,headers = self.HEADERS2, params = PARAMS)
         vods = vods['items']
@@ -685,10 +689,10 @@ class PLAYERPL():
         self.refreshTokenTVN()
 
         PARAMS = {}
-        urlk='https://player.pl/playerapi/product/vod/serial/%s/season/%s/episode/list?4K=true&platform=ANDROID_TV'%(str(idmain), str(idsezon))
+        urlk='https://player.pl/playerapi/product/vod/serial/%s/season/%s/episode/list?4K=true&platform=%s'%(str(idmain), str(idsezon), PF)
     
         epizody = getRequests(urlk,headers = self.HEADERS2, params = PARAMS)
-        mylist = getRequests('https://player.pl/playerapi/subscriber/product/available/list?4K=true&platform=ANDROID_TV',headers = self.HEADERS2, params = {})
+        mylist = getRequests('https://player.pl/playerapi/subscriber/product/available/list?4K=true&platform=%s'%(PF),headers = self.HEADERS2, params = {})
         mud ='playvid'
         fold =False
         for f in epizody:
@@ -725,7 +729,7 @@ class PLAYERPL():
         self.refreshTokenTVN()
 
         PARAMS = {}
-        urlk='https://player.pl/playerapi/product/vod/serial/%s/season/list?4K=true&platform=ANDROID_TV'%(str(id))
+        urlk='https://player.pl/playerapi/product/vod/serial/%s/season/list?4K=true&platform=%s'%(str(id), PF)
         out=[]
         sezony = getRequests(urlk,headers = self.HEADERS2, params = PARAMS)
         for sezon in sezony:
@@ -743,7 +747,7 @@ class PLAYERPL():
 
         PARAMS = {}
     
-        urlk = 'https://player.pl/playerapi/product/vod/serial/%s?4K=true&platform=ANDROID_TV'%str(id)
+        urlk = 'https://player.pl/playerapi/product/vod/serial/%s?4K=true&platform=%s'%(str(id), PF)
     
         data = getRequests(urlk,headers = self.HEADERS2, params = PARAMS)
         tytul, opis, foto, sezon, epizod = getMetaDane(data)
@@ -764,11 +768,11 @@ class PLAYERPL():
         self.refreshTokenTVN()
         id,slug = idslug.split(':')
         PARAMS ={}
-        urlk = 'https://player.pl/playerapi/product/section/%s?4K=true&platform=ANDROID_TV&firstResult=0&maxResults=250'%(id)
+        urlk = 'https://player.pl/playerapi/product/section/%s?4K=true&platform=%s&firstResult=0&maxResults=250'%(id, PF)
         data = getRequests(urlk,headers = self.HEADERS2, params = PARAMS)
     
     
-        mylist = getRequests('https://player.pl/playerapi/subscriber/product/available/list?4K=true&platform=ANDROID_TV',headers = self.HEADERS2, params = {})
+        mylist = getRequests('https://player.pl/playerapi/subscriber/product/available/list?4K=true&platform=%s'%(PF),headers = self.HEADERS2, params = {})
         
         items = data['items']
         for item in items:
@@ -801,14 +805,14 @@ class PLAYERPL():
         id,slug = idslug.split(':')
 
     
-        PARAMS = {'firstResult':'0','maxResults':'250','category[]':slug,'sort':'createdAt','order':'desc','genreId[]':id,'4K':'true','platform':'ANDROID_TV'}
+        PARAMS = {'firstResult':'0','maxResults':'250','category[]':slug,'sort':'createdAt','order':'desc','genreId[]':id,'4K':'true','platform':PF}
     
         urlk=self.PRODUCTVODLIST
     
         data = getRequests(urlk,headers = self.HEADERS2, params = PARAMS)
     
     
-        mylist = getRequests('https://player.pl/playerapi/subscriber/product/available/list?4K=true&platform=ANDROID_TV',headers = self.HEADERS2, params = {})
+        mylist = getRequests('https://player.pl/playerapi/subscriber/product/available/list?4K=true&platform=%s'%(PF),headers = self.HEADERS2, params = {})
         
         items = data['items']
         for item in items:
@@ -836,13 +840,13 @@ class PLAYERPL():
     def getTvs(self):
         self.refreshTokenTVN()
 
-        urlk='https://player.pl/playerapi/product/live/list?4K=true&platform=ANDROID_TV'
+        urlk='https://player.pl/playerapi/product/live/list?4K=true&platform=%s'%(PF)
     
         out=[]
         
         data = getRequests(urlk,headers = self.HEADERS2, params = {})
         
-        mylist = getRequests('https://player.pl/playerapi/subscriber/product/available/list?4K=true&platform=ANDROID_TV',headers = self.HEADERS2, params = {})
+        mylist = getRequests('https://player.pl/playerapi/subscriber/product/available/list?4K=true&platform=%s'%(PF),headers = self.HEADERS2, params = {})
         
 
         for dd in data:
