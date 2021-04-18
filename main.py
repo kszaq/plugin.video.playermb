@@ -540,16 +540,7 @@ class PLAYERPL():
         str_url=stream_url
         
         HEADERSz = {
-            'Authorization': 'Basic',
-            'API-DeviceInfo': '%s;%s;Android;9;%s;1.0.38(62);'%(self.USAGENT, self.USAGENTVER, self.MAKER ),
-            'API-Authentication': self.ACCESS_TOKEN,
-            'API-DeviceUid': self.DEVICE_ID,
-            'API-SubscriberHash': self.USER_HASH,
-            'API-SubscriberPub': self.USER_PUB,
-            'API-ProfileUid': self.SELECTED_PROFILE_ID,
-            'User-Agent': UA,
-            'Host': 'player.pl',
-            'X-NewRelic-ID': 'VQEOV1JbABABV1ZaBgMDUFU=',
+            'User-Agent': UA
         }
 
         is_helper = inputstreamhelper.Helper(PROTOCOL, drm=DRM)
@@ -576,6 +567,7 @@ class PLAYERPL():
             play_item.setProperty('inputstream.adaptive.manifest_update_parameter', 'full')
             play_item.setProperty('inputstream.adaptive.license_key', license_url+'|Content-Type=|R{SSM}|')
             play_item.setProperty('inputstream.adaptive.license_flags', "persistent_storage")
+            play_item.setProperty('inputstream.adaptive.stream_headers', '&'.join([f'{key}={value}' for key, value in HEADERSz.items()]))
         xbmcplugin.setResolvedUrl(addon_handle, True, listitem=play_item)
     
     def ListCollection(self):
