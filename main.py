@@ -426,6 +426,9 @@ class PLAYERPL():
     def getPlaylist(self,id_):
         self.refreshTokenTVN()
 
+        data = self.getTranslate(str(id_))
+        rodzaj = ("LIVE" if data.get("type_", "MOVIE") == "LIVE" else "MOVIE");
+
         HEADERSz = {
             'Authorization': 'Basic',
             'API-Authentication': self.ACCESS_TOKEN,
@@ -437,12 +440,7 @@ class PLAYERPL():
             'Host': 'player.pl',
             'X-NewRelic-ID': 'VQEOV1JbABABV1ZaBgMDUFU=',
         }
-    
-    
-        rodzaj ='MOVIE'
-        if 'kanal' in id_:
-            id_=id_.split(':')[0]
-            rodzaj = 'LIVE'
+
         urlk='https://player.pl/playerapi/product/%s/player/configuration?type=%s&4K=true&platform=%s'%(str(id_),rodzaj,PF)
     
         data = getRequests(urlk,headers = HEADERSz)
@@ -507,8 +505,6 @@ class PLAYERPL():
             return data
     
     def playvid(self,id):
-
-        data = self.getTranslate(str(id))
     
         stream_url, license_url, subtitles = self.getPlaylist(str(id))
         subt = ''
@@ -846,14 +842,13 @@ class PLAYERPL():
             tyt=dd['title']
             foto = dd['images']['pc'][0]['mainUrl']
             foto = 'https:' + foto if foto.startswith('//') else foto
-            urlid = '%s:%s'%(id_,'kanal')
             try:
                 opis = dd['lead']
             except:
                 opis=''
             dod=''
             if (not dd["payable"]) or dd['id'] in mylist:
-                out.append({'title':PLchar(tyt)+dod,'url':urlid,'img':foto,'plot':PLchar(opis)})
+                out.append({'title':PLchar(tyt)+dod,'url':id_,'img':foto,'plot':PLchar(opis)})
         return out
     def ListCateg(self,idslug):
         id,slug = idslug.split(':')
