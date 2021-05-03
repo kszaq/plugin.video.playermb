@@ -565,7 +565,7 @@ class PLAYERPL():
             play_item.setProperty('inputstream.adaptive.manifest_update_parameter', 'full')
             play_item.setProperty('inputstream.adaptive.license_key', license_url+'|Content-Type=|R{SSM}|')
             play_item.setProperty('inputstream.adaptive.license_flags', "persistent_storage")
-            play_item.setProperty('inputstream.adaptive.stream_headers', '&'.join([f'{key}={value}' for key, value in HEADERSz.items()]))
+            play_item.setProperty('inputstream.adaptive.stream_headers', '&'.join('%s=%s' % kv for kv in HEADERSz.items()))
         xbmcplugin.setResolvedUrl(addon_handle, True, listitem=play_item)
     
     def ListCollection(self):
