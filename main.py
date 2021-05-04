@@ -562,7 +562,8 @@ class PLAYERPL():
             play_item.setContentLookup(False)
             play_item.setProperty('inputstream.adaptive.manifest_type', PROTOCOL)
             play_item.setProperty('inputstream.adaptive.license_type', DRM)
-            play_item.setProperty('inputstream.adaptive.manifest_update_parameter', 'full')
+            if 'dvr' in str_url:
+                play_item.setProperty('inputstream.adaptive.manifest_update_parameter', 'full')
             play_item.setProperty('inputstream.adaptive.license_key', license_url+'|Content-Type=|R{SSM}|')
             play_item.setProperty('inputstream.adaptive.license_flags', "persistent_storage")
             play_item.setProperty('inputstream.adaptive.stream_headers', '&'.join('%s=%s' % kv for kv in HEADERSz.items()))
